@@ -71,4 +71,8 @@ public class Node<K extends Comparable<K>, V> {
     public void setDown(Node<K, V> down) {
         this.down = down;
     }
+
+    public boolean hasDown() {
+        return this.down != null;
+    }
 }
