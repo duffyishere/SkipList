@@ -9,8 +9,10 @@ public class SkipList<K extends Comparable<K>, V> {
     private Node<K, V> findNode(K key) {
         Node<K, V> node = head;
         Node<K, V> next;
+        Node<K, V> down;
+        K nodeKey;
 
-        while (node.getLevel() != 1 && node.hasNext()) {
+        while (true) {
             next = node.getNext();
 
             while(next != null && lessThanOrEqual(key, next.getKey())) {
@@ -18,11 +20,17 @@ public class SkipList<K extends Comparable<K>, V> {
                 next = node.getNext();
             }
 
-            if (node.getKey().compareTo(key) == 0) {
+            nodeKey = node.getKey();
+            if (nodeKey != null && equalTo(key, nodeKey)) {
                 break;
             }
 
-            node = node.getDown();
+            down = node.getDown();
+            if (down != null) {
+                node = down;
+            } else {
+                break;
+            }
         }
 
         return node;
@@ -30,5 +38,8 @@ public class SkipList<K extends Comparable<K>, V> {
 
     private boolean lessThanOrEqual(K o1, K o2) {
         return o1.compareTo(o2) <= 0;
+    }
+    private boolean equalTo(K o1, K o2) {
+        return o1.compareTo(o2) == 0;
     }
 }
