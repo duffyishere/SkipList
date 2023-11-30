@@ -52,6 +52,10 @@ public class Node<K extends Comparable<K>, V> {
         this.right = right;
     }
 
+    public boolean hasNext() {
+        return this.right != null;
+    }
+
     public Node<K, V> getUp() {
         return up;
     }
