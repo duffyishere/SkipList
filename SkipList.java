@@ -48,6 +48,22 @@ public class SkipList<K extends Comparable<K>, V> {
         size++;
     }
 
+    public V remove(K key) {
+        Node<K, V> node = findNode(key);
+        if (!equalTo(key, node.getKey())) {
+            return null;
+        }
+
+        V deletedValue = node.getValue();
+        while (node != null) {
+            Node<K, V> downNode = node.getDown();
+            node.disconnect();
+            node = downNode;
+        }
+
+        return deletedValue;
+    }
+
     private Node<K, V> findNode(K key) {
         Node<K, V> node = head;
         Node<K, V> next;
@@ -157,10 +173,6 @@ public class SkipList<K extends Comparable<K>, V> {
             this.right = right;
         }
 
-        public boolean hasNext() {
-            return this.right != null;
-        }
-
         public Node<K, V> getUp() {
             return up;
         }
@@ -177,8 +189,19 @@ public class SkipList<K extends Comparable<K>, V> {
             this.down = down;
         }
 
-        public boolean hasDown() {
-            return this.down != null;
+        public void disconnect() {
+            Node<K, V> prev = this.getPrevious();
+            Node<K, V> next = this.getNext();
+            if (prev != null) {
+                prev.setNext(next);
+            }
+            if (next != null) {
+                next.setPrevious(prev);
+            }
+
+            this.setPrevious(null);
+            this.setNext(null);
+            this.setDown(null);
         }
     }
 }
